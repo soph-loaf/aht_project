@@ -100,25 +100,25 @@ def predict_air_temp(T_g, q_conv, h):
     T_a = T_g - q_conv/h
     return T_a
 
-def ground_temp_solar_var(T_a, u, n):
+def ground_temp_solar_var(T_a, u, n, alpha=.6):
     """predicting ground temperature using variable solar radiation"""
     Nu_turb = .037*Re_x(u)**.8*Pr**(1/3)
     h_turb = Nu_turb * k / L
     delta_s = 23.45*np.sin((360/365)*(n-81)*np.pi/180)
     # print(delta_s)
-    alpha_qs_var = 200.0*np.sin((90 - 40.7 + delta_s)*np.pi/180)
+    alpha_qs_var = 333.333*alpha*np.sin((90 - 40.7 + delta_s)*np.pi/180)
     # print(alpha_qs_var)
     T_g = (alpha_qs_var + h_turb*T_a + 4.0*sigma*epsilon*T_sky**4)/(h_turb + 4.0*sigma*epsilon*T_sky**3)
     # print(T_g)
     # q_solar_var = alpha_qs_var - 4.0*sigma*epsilon*T_sky**3*(T_g_ref - T_sky)
     return T_g
 
-def ground_temp_ctrl_var(T_a, u, d, n):
+def ground_temp_ctrl_var(T_a, u, d, n, alpha=.6):
     """predicting ground temperature for Central Park (includes evaporation & variable solar radiation)"""
     Nu_turb = .037*Re_x(u)**.8*Pr**(1/3)
     h_turb = Nu_turb * k / L
     delta_s = 23.45*np.sin((360/365)*(n-81)*np.pi/180)
-    alpha_qs_var = 200.0*np.sin((90 - 40.7 + delta_s)*np.pi/180)
+    alpha_qs_var = 333.333*alpha*np.sin((90 - 40.7 + delta_s)*np.pi/180)
     T_g_ctrl = (alpha_qs_var + h_turb*T_a + 4.0*sigma*epsilon*T_sky**4 - q_evap(d))/(h_turb + 4.0*sigma*epsilon*T_sky**3)
     return T_g_ctrl
     
